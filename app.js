@@ -1,54 +1,102 @@
-let num1 = 4;
-let num2 = 4;
-let operator = '-';
 
+    let firstNumber = '';
+    let operator = '';
+    let secondNumber = '';
+    let currentValue = '0';
 
-function operate(operator, num1, num2) {
-    switch (operator) {
-        case '+':
-            return add(num1, num2);
-        case '-':
-            return subtract(num1, num2);
-        case '*':
-            return multiply(num1, num2);
-        case '/':
-            return divide(num1, num2);
-        default:
-            return "Invalid operator";
+    // Function to update display with a new value
+    function updateDisplay(value) {
+        currentValue = value;
+        document.getElementById('display').textContent = value;
     }
-}
 
-// Test the operate function
-console.log(operate(operator, num1, num2)); // Output: 8
-
-// Function to add two numbers
-function add(a, b) {
-    return a + b;
-}
-
-// Function to subtract two numbers
-function subtract(a, b) {
-    return a - b;
-}
-
-// Function to multiply two numbers
-function multiply(a, b) {
-    return a * b;
-}
-
-// Function to divide two numbers
-function divide(a, b) {
-    // Check if denominator is not zero to avoid division by zero error
-    if (b === 0) {
-        return "Error: Division by zero!";
-    } else {
-        return a / b;
+    // Function to handle number button clicks
+    function handleNumberClick(number) {
+        if (currentValue === '0') {
+            updateDisplay(number);
+        } else {
+            updateDisplay(`${currentValue}${number}`);
+        }
     }
-}
 
-// Test the functions
-console.log("Addition:", add(5, 3)); 
-console.log("Subtraction:", subtract(5, 3)); 
-console.log("Multiplication:", multiply(5, 3)); 
-console.log("Division:", divide(5, 3)); 
-console.log("Division by zero:", divide(5,5 ));
+    // Function to handle operator button clicks
+    function handleOperatorClick(op) {
+        // Store the first number and the operator
+        firstNumber = currentValue;
+        operator = op;
+        updateDisplay('0');
+    }
+
+    // Function to handle equals button click
+    function handleEqualsClick() {
+        // Store the second number
+        secondNumber = currentValue;
+        // Perform the operation
+        const result = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber));
+        // Update the display with the result
+        updateDisplay(result.toString());
+    }
+
+    // Define the operate function
+    function operate(operator, num1, num2) {
+        switch (operator) {
+            case '+':
+                return num1 + num2;
+            case '-':
+                return num1 - num2;
+            case '*':
+                return num1 * num2;
+            case '/':
+                if (num2 === 0) {
+                    return "Error: Division by zero!";
+                } else {
+                    return num1 / num2;
+                }
+            default:
+                return "Invalid operator";
+        }
+    }
+
+    // Add event listeners to number buttons
+    for (let i = 0; i <= 9; i++) {
+        const btn = document.getElementById(`btn${i}`);
+        btn.addEventListener('click', function () {
+            handleNumberClick(i);
+        });
+    }
+
+    // Add event listeners to operator buttons
+    const btnAdd = document.getElementById('btnAdd');
+    btnAdd.addEventListener('click', function () {
+        handleOperatorClick('+');
+    });
+
+    const btnSubtract = document.getElementById('btnSubtract');
+    btnSubtract.addEventListener('click', function () {
+        handleOperatorClick('-');
+    });
+
+    const btnMultiply = document.getElementById('btnMultiply');
+    btnMultiply.addEventListener('click', function () {
+        handleOperatorClick('*');
+    });
+
+    const btnDivide = document.getElementById('btnDivide');
+    btnDivide.addEventListener('click', function () {
+        handleOperatorClick('/');
+    });
+
+    // Add event listener to equals button
+    const btnEquals = document.getElementById('btnEquals');
+    btnEquals.addEventListener('click', function () {
+        handleEqualsClick();
+    });
+
+    // Add event listener to Clear button
+    const btnClear = document.getElementById('btnClear');
+    btnClear.addEventListener('click', function () {
+        updateDisplay('0');
+        firstNumber = '';
+        operator = '';
+        secondNumber = '';
+    });
